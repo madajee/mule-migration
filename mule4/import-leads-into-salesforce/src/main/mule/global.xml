@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+		http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<global-property doc:name="Global Property" doc:id="bda27366-937f-420e-b324-13ceac45df69" name="env" value="local" />
+	<configuration-properties doc:name="Configuration properties" doc:id="b69bd712-1fbf-4115-9739-8e853b567bf9" file="config/queries-${env}.properties" />
+	<configuration-properties doc:name="Configuration properties" doc:id="475891f9-0b38-4ee1-9a57-bf9226705d6e" file="config/config-${env}.yaml"/>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="8cc9b764-d9cf-4f06-b66e-5b15a771c544" >
+		<salesforce:basic-connection username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.token}" />
+	</salesforce:sfdc-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="2a2ef7b2-5e53-4977-ae48-6e6a57fc82c9" >
+		<file:connection workingDir="/Users/home/mulesoft/migration-mule3-mule4/mule4/import-leads-into-salesforce" />
+	</file:config>
+</mule>

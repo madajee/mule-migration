@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Mule Migration Assistant Report</title>
+    <link rel="stylesheet" type="text/css" href="assets/styles/mulesoft-styles.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles/tsorter.css">
+</head>
+<body>
+<div class="mulesoft-topbar">
+    <div class="mulesoft-appbar">
+        <div class="muleicon muleicon-logo"></div>
+        <div class="anypoint-brand">Mule Migration Assistant 1.0.0</div>
+    </div>
+</div>
+<div class="col-md-8">
+    <h4>Issues found during migration:</h2>
+</div>
+    <div class="col-md-8 col-md-offset-1">
+        <h2 class="text-bold">Errors:</h2>
+        <table id="resources_table" class="table table-featured table-hover sortable">
+                <thead>
+                <tr>
+                    <th colspan="2" data-tsorter="link">Resource</th>
+                    <th data-tsorter="numeric"># Issues</th>
+                </tr>
+                </thead>
+                <tbody id="table-body">
+                        <tbody class="labels">
+                            <tr>
+                                <td colspan="2">
+                                    <a><label for="error-import-leads-into-salesforce.xml">import-leads-into-salesforce.xml</label></a>
+                                    <input type="checkbox" name="error-import-leads-into-salesforce.xml" id="error-import-leads-into-salesforce.xml" data-toggle="toggle">
+                                </td>
+                                <td>4</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="hide" style="display: none">
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/error-import-leads-into-salesforce-0.html>- The migration of 'sfdc' is not supported.</a>
+                                        </td>
+                                        <td>3</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/error-import-leads-into-salesforce-1.html>- Custom types defined in Studio 6 are not migrated to Studio 7.</a>
+                                        </td>
+                                        <td>1</td>
+                                    </tr>
+                        </tbody>
+                </tbody>
+            </table>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+        <h2 class="text-bold">Warnings:</h2>
+        <table id="resources_table" class="table table-featured table-hover sortable">
+                <thead>
+                <tr>
+                    <th colspan="2" data-tsorter="link">Resource</th>
+                    <th data-tsorter="numeric"># Issues</th>
+                </tr>
+                </thead>
+                <tbody id="table-body">
+                        <tbody class="labels">
+                            <tr>
+                                <td colspan="2">
+                                    <a><label for="warn-import-leads-into-salesforce.xml">import-leads-into-salesforce.xml</label></a>
+                                    <input type="checkbox" name="warn-import-leads-into-salesforce.xml" id="warn-import-leads-into-salesforce.xml" data-toggle="toggle">
+                                </td>
+                                <td>4</td>
+                            </tr>
+                        </tbody>
+                        <tbody class="hide" style="display: none">
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/warn-import-leads-into-salesforce-0.html>- The MEL expression could not be migrated to a DataWeave expression.</a>
+                                        </td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/warn-import-leads-into-salesforce-1.html>- Threading profiles do not exist in Mule 4. You can replace them with a 'maxConcurrency' value in the flow.</a>
+                                        </td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/warn-import-leads-into-salesforce-2.html>- Instead of using outbound properties in the flow, move the expression that sets the property into the XML attribute (such as 'method') of the operation or listener that accepts the expression.</a>
+                                        </td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <a href=resources/warn-import-leads-into-salesforce-3.html>- Expressions that query 'inboundProperties' from the message should instead query the message 'attributes'. Remove this component if there are no uses of 'inboundProperties' in expressions or components that rely on 'inboundProperties' (such as 'copy-properties').</a>
+                                        </td>
+                                        <td>1</td>
+                                    </tr>
+                        </tbody>
+                </tbody>
+            </table>
+    </div>
+    <div class="col-md-8 col-md-offset-1">
+            <h2 class="text-bold">Info:</h2>
+            <table id="resources_table" class="table table-featured table-hover sortable">
+                    <thead>
+                    <tr>
+                        <th colspan="2" data-tsorter="link">Resource</th>
+                        <th data-tsorter="numeric"># Issues</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body">
+                            <tbody class="labels">
+                                <tr>
+                                    <td colspan="2">
+                                        <a><label for="info-import-leads-into-salesforce.xml">import-leads-into-salesforce.xml</label></a>
+                                        <input type="checkbox" name="warn-import-leads-into-salesforce.xml" id="info-import-leads-into-salesforce.xml" data-toggle="toggle">
+                                    </td>
+                                    <td>1</td>
+                                </tr>
+                            </tbody>
+                            <tbody class="hide" style="display: none">
+                                        <tr>
+                                            <td colspan="2">
+                                                <a href=resources/info-import-leads-into-salesforce-0.html>- 'responseTimeout' was not being used by the file transport.</a>
+                                            </td>
+                                            <td>1</td>
+                                        </tr>
+                            </tbody>
+                    </tbody>
+                </table>
+        </div>
+
+    <script type="text/javascript" src="assets/js/jquery-3.3.1.js"></script>
+    <script type="text/javascript">
+         $('[data-toggle="toggle"]').change(function(){
+            $(this).parents().next('.hide').toggle();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+*********************************** hello-world *****************************************************
+
+java -jar mule-migration-assistant-runner-1.0.0.jar -muleVersion 4.3.0 -projectBasePath /Users/home/mulesoft/migration-mule3-mule4/mule3/hello-world -destinationProjectBasePath /Users/home/mulesoft/migration-mule3-mule4/mmamule4/hello-world
+Executing migrator 1.0.0...
+ERROR 2025-07-23 14:59:55,767 [main] com.mulesoft.tools.migration.engine.MigrationJob: Failed to apply task, rolling back and continuing with the next one.
+com.mulesoft.tools.migration.exception.MigrationTaskException: Task execution exception. Cannot invoke "String.replaceAll(String, String)" because the return value of "com.mulesoft.tools.migration.project.model.pom.PomModel.getVersion()" is null
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:94) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.engine.MigrationJob.execute(MigrationJob.java:92) [mule-migration-tool-engine-1.0.0.jar:1.0.0]
+	at com.mulesoft.tools.migration.MigrationRunner.main(MigrationRunner.java:82) [mule-migration-assistant-runner-1.0.0.jar:1.0.0]
+Caused by: java.lang.NullPointerException: Cannot invoke "String.replaceAll(String, String)" because the return value of "com.mulesoft.tools.migration.project.model.pom.PomModel.getVersion()" is null
+	at com.mulesoft.tools.migration.library.mule.steps.pom.UpdateProjectVersion.execute(UpdateProjectVersion.java:28) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.library.mule.steps.pom.UpdateProjectVersion.execute(UpdateProjectVersion.java:18) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$execute$5(AbstractMigrationTask.java:86) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:84) ~[mule-migration-tool-api-1.0.0.jar:?]
+	... 2 more
+===============================================================================
+MIGRATION ASSISTANT RUN SUCCESSFULLY
+===============================================================================
+Total time: 1.074 s
+Migration report: /Users/home/mulesoft/migration-mule3-mule4/mmamule4/hello-world/report/summary.html
+
+*********************************** import-leads-into-salesforce *****************************************************
+
+home@MacBookAir MMA % java -jar mule-migration-assistant-runner-1.0.0.jar -muleVersion 4.3.0 -projectBasePath /Users/home/mulesoft/migration-mule3-mule4/mule3/import-leads-into-salesforce -destinationProjectBasePath /Users/home/mulesoft/migration-mule3-mule4/mmamule4/import-leads-into-salesforce
+Executing migrator 1.0.0...
+ERROR 2025-07-24 07:43:11,477 [main] com.mulesoft.tools.migration.engine.MigrationJob: Failed to apply task, rolling back and continuing with the next one.
+com.mulesoft.tools.migration.exception.MigrationTaskException: Task execution exception. Cannot invoke "String.replaceAll(String, String)" because the return value of "com.mulesoft.tools.migration.project.model.pom.PomModel.getVersion()" is null
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:94) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.engine.MigrationJob.execute(MigrationJob.java:92) [mule-migration-tool-engine-1.0.0.jar:1.0.0]
+	at com.mulesoft.tools.migration.MigrationRunner.main(MigrationRunner.java:82) [mule-migration-assistant-runner-1.0.0.jar:1.0.0]
+Caused by: java.lang.NullPointerException: Cannot invoke "String.replaceAll(String, String)" because the return value of "com.mulesoft.tools.migration.project.model.pom.PomModel.getVersion()" is null
+	at com.mulesoft.tools.migration.library.mule.steps.pom.UpdateProjectVersion.execute(UpdateProjectVersion.java:28) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.library.mule.steps.pom.UpdateProjectVersion.execute(UpdateProjectVersion.java:18) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$execute$5(AbstractMigrationTask.java:86) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:84) ~[mule-migration-tool-api-1.0.0.jar:?]
+	... 2 more
+ERROR 2025-07-24 07:43:11,898 [main] com.mulesoft.tools.migration.engine.MigrationJob: Failed to apply task, rolling back and continuing with the next one.
+com.mulesoft.tools.migration.exception.MigrationTaskException: Task execution exception. Task execution exception (Cannot invoke "org.jdom2.Element.getAttributeValue(String)" because "flow" is null) migrating node:
+<enricher xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" doc:name="Message Enricher" source="#[payload.size() &gt; 0]" target="#[recordVars['exists']]">
+                    <sfdc:query xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" config-ref="Salesforce" doc:name="Find Lead" query="dsql:SELECT Id FROM Lead WHERE Email = '#[payload[&quot;Email&quot;]]'">
+                        <!--Migration ERROR: The migration of 'sfdc' is not supported.-->
+                        <!--    For more information refer to:-->
+                        <!--        * https://docs.mulesoft.com/mule-runtime/4.3/migration-connectors-->
+                        <!--        * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool.adoc#unsupported_connectors-->
+                    </sfdc:query>
+                </enricher>
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:94) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.engine.MigrationJob.execute(MigrationJob.java:92) [mule-migration-tool-engine-1.0.0.jar:1.0.0]
+	at com.mulesoft.tools.migration.MigrationRunner.main(MigrationRunner.java:82) [mule-migration-assistant-runner-1.0.0.jar:1.0.0]
+Caused by: com.mulesoft.tools.migration.exception.MigrationStepException: Task execution exception (Cannot invoke "org.jdom2.Element.getAttributeValue(String)" because "flow" is null) migrating node:
+<enricher xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" doc:name="Message Enricher" source="#[payload.size() &gt; 0]" target="#[recordVars['exists']]">
+                    <sfdc:query xmlns:sfdc="http://www.mulesoft.org/schema/mule/sfdc" config-ref="Salesforce" doc:name="Find Lead" query="dsql:SELECT Id FROM Lead WHERE Email = '#[payload[&quot;Email&quot;]]'">
+                        <!--Migration ERROR: The migration of 'sfdc' is not supported.-->
+                        <!--    For more information refer to:-->
+                        <!--        * https://docs.mulesoft.com/mule-runtime/4.3/migration-connectors-->
+                        <!--        * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool.adoc#unsupported_connectors-->
+                    </sfdc:query>
+                </enricher>
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$fetchAndProcessNodes$7(AbstractMigrationTask.java:108) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[?:?]
+	at java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.util.LinkedList$LLSpliterator.forEachRemaining(LinkedList.java:1242) ~[?:?]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[?:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[?:?]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.fetchAndProcessNodes(AbstractMigrationTask.java:102) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$execute$3(AbstractMigrationTask.java:73) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:71) ~[mule-migration-tool-api-1.0.0.jar:?]
+	... 2 more
+Caused by: java.lang.NullPointerException: Cannot invoke "org.jdom2.Element.getAttributeValue(String)" because "flow" is null
+	at com.mulesoft.tools.migration.library.mule.steps.core.Enricher.execute(Enricher.java:60) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.library.mule.steps.core.Enricher.execute(Enricher.java:37) ~[mule-migration-tool-library-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$fetchAndProcessNodes$7(AbstractMigrationTask.java:105) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[?:?]
+	at java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[?:?]
+	at java.util.LinkedList$LLSpliterator.forEachRemaining(LinkedList.java:1242) ~[?:?]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[?:?]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[?:?]
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[?:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[?:?]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[?:?]
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.fetchAndProcessNodes(AbstractMigrationTask.java:102) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.lambda$execute$3(AbstractMigrationTask.java:73) ~[mule-migration-tool-api-1.0.0.jar:?]
+	at java.util.ArrayList.forEach(ArrayList.java:1511) ~[?:?]
+	at com.mulesoft.tools.migration.task.AbstractMigrationTask.execute(AbstractMigrationTask.java:71) ~[mule-migration-tool-api-1.0.0.jar:?]
+	... 2 more
+===============================================================================
+MIGRATION ASSISTANT RUN SUCCESSFULLY
+===============================================================================
+Total time: 1.763 s
+Migration report: /Users/home/mulesoft/migration-mule3-mule4/mmamule4/import-leads-into-salesforce/report/summary.html

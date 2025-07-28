@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:core="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+    <http:listener-config doc:name="HTTP Listener Configuration" name="HTTP_Listener_Configuration">
+        <http:listener-connection host="0.0.0.0" port="${http.port}" />
+    </http:listener-config>
+
+    <flow name="HelloWorldFlow1">
+        <http:listener config-ref="HTTP_Listener_Configuration" doc:description="This endpoint receives an HTTP message." doc:name="Receive HTTP request" path="/helloWorld">
+        </http:listener>
+        <set-payload doc:description="This processor sets the payload of the message to the string 'Hello World'." doc:name="Set Payload to a constant string" value="#['Hello World']" />
+    </flow>
+</mule>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Mule Migratiol Assistant Report</title>
+    <link rel="stylesheet" type="text/css" href="../assets/styles/mulesoft-styles.css">
+    <link rel="stylesheet" type="text/css" href="../assets/styles/tsorter.css">
+</head>
+<body>
+    <div class="mulesoft-topbar">
+        <div class="mulesoft-appbar">
+            <div class="muleicon muleicon-logo"></div>
+            <div class="anypoint-brand">Mule Migration Assistant 1.0.0</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-offset-1 sidemenu">
+        <ul class="sidemenu-back">
+            <li><a href="../summary.html">Summary</a></li>
+        </ul>
+    </div>
+    <div class="col-md-8">
+        <h2 class="text-bold">Issues found on: <span class="text-italic text-normal">import-leads-into-salesforce.xml</span></h2>
+        <h4 class="text-bold">Description: <span class="text-italic text-normal">Threading profiles do not exist in Mule 4. You can replace them with a 'maxConcurrency' value in the flow.</span></h4>
+        <h4 class="text-bold">Documentation: </h4>
+            <h4><a href="https://docs.mulesoft.com/mule-runtime/4.3/intro-engine">https://docs.mulesoft.com/mule-runtime/4.3/intro-engine</a></h4>
+        <hr>
+        <br>
+            <div class="col-md-12">
+                <h4 class="text-bold">
+                    Line: <span class="text-italic text-normal">12</span>&nbsp;
+                    Column: <span class="text-italic text-normal">35</span>
+                </h4>
+                <br>
+                <pre>&lt;batch:job name=&quot;CreateLeadsBatch&quot;&gt;
+    &lt;batch:process-records&gt;
+        &lt;batch:step name=&quot;LeadExistsStep&quot;&gt;
+            &lt;enricher doc:name=&quot;Message Enricher&quot; source=&quot;#[payload.size() &amp;gt; 0]&quot; target=&quot;#[recordVars[&apos;exists&apos;]]&quot;&gt;
+                &lt;sfdc:query config-ref=&quot;Salesforce&quot; doc:name=&quot;Find Lead&quot; query=&quot;dsql:SELECT Id FROM Lead WHERE Email = &apos;#[payload[&amp;quot;Email&amp;quot;]]&apos;&quot;&gt;
+                    &lt;!--Migration ERROR: The migration of &apos;sfdc&apos; is not supported.--&gt;
+                    &lt;!--    For more information refer to:--&gt;
+                    &lt;!--        * https://docs.mulesoft.com/mule-runtime/4.3/migration-connectors--&gt;
+                    &lt;!--        * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool.adoc#unsupported_connectors--&gt;
+                &lt;/sfdc:query&gt;
+            &lt;/enricher&gt;
+        &lt;/batch:step&gt;
+        &lt;batch:step accept-expression=&quot;#[!recordVars[&apos;exists&apos;]]&quot; name=&quot;LeadInsertStep&quot;&gt;
+            &lt;logger doc:name=&quot;Log the lead&quot; level=&quot;INFO&quot; message=&quot;#[&amp;quot;Got Record $(payload), it exists $(vars[&apos;exists&apos;])&amp;quot;]&quot; /&gt;
+            &lt;batch:commit doc:name=&quot;Batch Commit&quot; size=&quot;200&quot;&gt;
+                &lt;sfdc:create config-ref=&quot;Salesforce&quot; doc:name=&quot;Insert Lead&quot; type=&quot;Lead&quot;&gt;
+                    &lt;!--Migration ERROR: The migration of &apos;sfdc&apos; is not supported.--&gt;
+                    &lt;!--    For more information refer to:--&gt;
+                    &lt;!--        * https://docs.mulesoft.com/mule-runtime/4.3/migration-connectors--&gt;
+                    &lt;!--        * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool.adoc#unsupported_connectors--&gt;
+                    &lt;sfdc:objects ref=&quot;#[payload]&quot; /&gt;
+                &lt;/sfdc:create&gt;
+            &lt;/batch:commit&gt;
+        &lt;/batch:step&gt;
+        &lt;batch:step accept-policy=&quot;ONLY_FAILURES&quot; name=&quot;LogFailuresStep&quot;&gt;
+            &lt;logger doc:name=&quot;Log Failure&quot; level=&quot;INFO&quot; message=&quot;#[&amp;quot;Got Failure $(payload)&amp;quot;]&quot; /&gt;
+        &lt;/batch:step&gt;
+    &lt;/batch:process-records&gt;
+    &lt;batch:on-complete&gt;
+        &lt;logger doc:name=&quot;Log Results&quot; level=&quot;INFO&quot; message=&quot;#[&amp;quot;$(payload.loadedRecords) Loaded Records $(payload.failedRecords) Failed Records&amp;quot;]&quot; /&gt;
+    &lt;/batch:on-complete&gt;
+&lt;/batch:job&gt;</pre>
+                <hr>
+            </div>
+    </div>
+</body>
+</html>

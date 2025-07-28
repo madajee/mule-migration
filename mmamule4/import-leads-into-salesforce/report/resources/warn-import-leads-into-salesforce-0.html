@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Mule Migratiol Assistant Report</title>
+    <link rel="stylesheet" type="text/css" href="../assets/styles/mulesoft-styles.css">
+    <link rel="stylesheet" type="text/css" href="../assets/styles/tsorter.css">
+</head>
+<body>
+    <div class="mulesoft-topbar">
+        <div class="mulesoft-appbar">
+            <div class="muleicon muleicon-logo"></div>
+            <div class="anypoint-brand">Mule Migration Assistant 1.0.0</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-md-offset-1 sidemenu">
+        <ul class="sidemenu-back">
+            <li><a href="../summary.html">Summary</a></li>
+        </ul>
+    </div>
+    <div class="col-md-8">
+        <h2 class="text-bold">Issues found on: <span class="text-italic text-normal">import-leads-into-salesforce.xml</span></h2>
+        <h4 class="text-bold">Description: <span class="text-italic text-normal">The MEL expression could not be migrated to a DataWeave expression.</span></h4>
+        <h4 class="text-bold">Documentation: </h4>
+            <h4><a href="https://docs.mulesoft.com/mule-runtime/4.3/migration-mel">https://docs.mulesoft.com/mule-runtime/4.3/migration-mel</a></h4>
+            <h4><a href="https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#mel_expressions">https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool-post-mig.adoc#mel_expressions</a></h4>
+            <h4><a href="https://blogs.mulesoft.com/dev/mule-dev/why-dataweave-main-expression-language-mule-4">https://blogs.mulesoft.com/dev/mule-dev/why-dataweave-main-expression-language-mule-4</a></h4>
+        <hr>
+        <br>
+            <div class="col-md-12">
+                <h4 class="text-bold">
+                    Line: <span class="text-italic text-normal">0</span>&nbsp;
+                    Column: <span class="text-italic text-normal">0</span>
+                </h4>
+                <br>
+                <pre>&lt;batch:step acceptExpression=&quot;#[!recordVars[&apos;exists&apos;]]&quot; name=&quot;LeadInsertStep&quot;&gt;
+    &lt;logger doc:name=&quot;Log the lead&quot; level=&quot;INFO&quot; message=&quot;#[&amp;quot;Got Record $(payload), it exists $(vars[&apos;exists&apos;])&amp;quot;]&quot; /&gt;
+    &lt;batch:commit doc:name=&quot;Batch Commit&quot; size=&quot;200&quot;&gt;
+        &lt;sfdc:create config-ref=&quot;Salesforce&quot; doc:name=&quot;Insert Lead&quot; type=&quot;Lead&quot;&gt;
+            &lt;!--Migration ERROR: The migration of &apos;sfdc&apos; is not supported.--&gt;
+            &lt;!--    For more information refer to:--&gt;
+            &lt;!--        * https://docs.mulesoft.com/mule-runtime/4.3/migration-connectors--&gt;
+            &lt;!--        * https://github.com/mulesoft/mule-migration-assistant/blob/master/docs/user-docs/migration-tool.adoc#unsupported_connectors--&gt;
+            &lt;sfdc:objects ref=&quot;#[payload]&quot; /&gt;
+        &lt;/sfdc:create&gt;
+    &lt;/batch:commit&gt;
+&lt;/batch:step&gt;</pre>
+                <hr>
+            </div>
+    </div>
+</body>
+</html>
