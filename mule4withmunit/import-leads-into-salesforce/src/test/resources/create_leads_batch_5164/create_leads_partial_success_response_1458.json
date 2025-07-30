@@ -1,0 +1,76 @@
+[
+  {
+    "id": "00Q7F000006xB1GUAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "id": "00Q7F000006xB1HVAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "id": "00Q7F000006xB1IWAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "id": "00Q7F000006xB1JXAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "id": "00Q7F000006xB1KYAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "id": "00Q7F000006xB1LZAU",
+    "success": true,
+    "created": true
+  },
+  {
+    "success": false,
+    "created": false,
+    "errors": [
+      {
+        "statusCode": "REQUIRED_FIELD_MISSING",
+        "message": "Required fields are missing: [Company]",
+        "fields": ["Company"]
+      }
+    ]
+  },
+  {
+    "success": false,
+    "created": false,
+    "errors": [
+      {
+        "statusCode": "INVALID_EMAIL_ADDRESS",
+        "message": "Email: invalid email address: gavin.belson@hooli.com",
+        "fields": ["Email"]
+      }
+    ]
+  },
+  {
+    "success": false,
+    "created": false,
+    "errors": [
+      {
+        "statusCode": "DUPLICATE_VALUE",
+        "message": "duplicate value found: Email__c duplicates value on record with id: 00Q7F000006xB1NIAU",
+        "fields": ["Email"]
+      }
+    ]
+  },
+  {
+    "success": false,
+    "created": false,
+    "errors": [
+      {
+        "statusCode": "REQUIRED_FIELD_MISSING",
+        "message": "Required fields are missing: [LastName]",
+        "fields": ["LastName"]
+      }
+    ]
+  }
+]

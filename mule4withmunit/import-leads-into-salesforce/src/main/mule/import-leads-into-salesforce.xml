@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:batch="http://www.mulesoft.org/schema/mule/batch"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="CreateLeadsBatch" doc:id="839ecb1c-ba85-463b-90ef-abacf50d2a5d" >
+		<file:listener doc:name="On New or Updated File" doc:id="d46acef7-00fd-4209-9326-7c010a951e0e" moveToDirectory="src/main/resources/output" directory="src/main/resources/input" recursive="false" autoDelete="true" config-ref="File_Config">
+			<scheduling-strategy >
+				<fixed-frequency frequency="10000"/>
+			</scheduling-strategy>
+		</file:listener>
+		<ee:transform doc:name="Transform CSV to Maps" doc:id="a0a8b89e-9065-49f8-8a05-1795ecdb0f59" >
+			<ee:message >
+				<ee:set-payload resource="dwl/csv_to_maps.dwl" />
+			</ee:message>
+		</ee:transform>
+		<batch:job jobName="CreateLeadsBatch" doc:id="5d198c00-b007-4dda-81ba-18ece5eddac5" >
+			<batch:process-records >
+				<batch:step name="LeadExistsStep" doc:id="ba47365b-1ff3-4cc6-ab8e-e6d67d1c1a04" >
+					<!-- <salesforce:query doc:name="Find Lead" doc:id="76d0b552-b267-46f6-84d0-183a0b01138c" /> -->
+					<logger level="INFO" doc:name="Before_Logger" doc:id="38969584-b394-472c-8f3c-0ef29ebf7eaa" message="#[output application/json --- {message: 'Before Query Payload', payload: payload}]"/>
+					<flow-ref doc:name="get-lead-by-email-subflow" doc:id="60f2ee18-7d8f-4c49-8f18-ca5abbe12ce5" name="get-lead-by-email-subflow"/>
+					<logger level="INFO" doc:name="After_Logger" doc:id="de37c0a7-43d3-4d05-99bf-337a7bdfbea4" message="#[output application/json --- {message: 'After Query Payload', payload: vars.leadbyemail}]"/>
+				</batch:step>
+				<batch:step name="LeadInsertStep" doc:id="879116b2-6281-4d17-be07-d8ae879841ef" acceptExpression="isEmpty(vars.leadbyemail)">
+					<logger level="INFO" doc:name="After_Logger" doc:id="bcf9a5ed-37ba-4cb3-ab2b-b86806a12a3c" message="#[output application/json --- {message: 'LeadInsertStep', payload: payload}]"/>
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="31797143-cc56-41e5-8844-4c7312c36e9b" size="200">
+						<logger level="INFO" doc:name="Before Insert Logger" doc:id="2a298ee4-20f0-453e-9198-ed9eb7fb0d43" message="#[output application/json --- {message: 'LeadAggregatorInsertStep', payload: payload}]"/>
+						<salesforce:create doc:name="Create Leads" doc:id="a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4d" config-ref="Salesforce_Config" type="Lead">
+							<salesforce:records><![CDATA[#[payload]]]></salesforce:records>
+						</salesforce:create>
+						<logger level="INFO" doc:name="After Insert Logger" doc:id="f1e2d3c4-b5a6-4c5d-8e7f-9a0b1c2d3e4" message="#[output application/json --- {message: 'Leads Created Successfully', payload: payload}]"/>
+					</batch:aggregator>
+				</batch:step>
+				 <batch:step acceptPolicy="ONLY_FAILURES" name="LogFailuresStep">
+                    <logger doc:name="Log Failure" level="INFO" message="#[&quot;Got Failure $(payload)&quot;]" />
+                </batch:step>
+			</batch:process-records>
+			<batch:on-complete >
+				<logger doc:name="Log Results" level="INFO" message="#[&quot;$(payload.loadedRecords) Loaded Records $(payload.failedRecords) Failed Records&quot;]" />
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+	<sub-flow name="get-lead-by-email-subflow" doc:id="0aa6e168-3984-47eb-805d-831c512bc8f3">
+		<salesforce:query doc:name="Find Lead" doc:id="7a20d405-d842-4791-87dd-69f3e99843c1" config-ref="Salesforce_Config" target="leadbyemail">
+            <salesforce:salesforce-query><![CDATA[${leadbyemail.select}]]></salesforce:salesforce-query>
+            <salesforce:parameters><![CDATA[#[output application/java
+---
+{
+	'email' : payload.Email
+}]]]></salesforce:parameters>
+        </salesforce:query>
+	</sub-flow>
+	
+</mule>

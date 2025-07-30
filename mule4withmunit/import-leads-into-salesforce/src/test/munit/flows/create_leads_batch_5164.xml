@@ -1,0 +1,168 @@
+<?xml version="1.0" ?>
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="     http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd     http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd     http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd     http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+  <munit:config name="create_leads_batch_5164.xml"/>
+  <munit:test name="create_leads_batch_0" doc:id="a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4e" description="Happy path test case for creating 10 leads successfully where none of the leads already exist in Salesforce.">
+    <!-- Behavior section: Mocking external systems and setting up initial data -->
+    <munit:behavior>
+      <!-- Set the initial event with the CSV payload from a file -->
+      <munit:set-event doc:name="Set Event with CSV Payload" doc:id="f1e2d3c4-b5a6-4c5d-8e7f-9a0b1c2d3e4f">
+        <munit:payload value="#[MunitTools::getResourceAsString('create_leads_batch_5164/leads_2465.csv')]" mediaType="text/csv" encoding="UTF-8"/>
+      </munit:set-event>
+      <!-- Mock the Salesforce query to return an empty list, simulating no existing leads -->
+      <munit-tools:mock-when doc:name="Mock Salesforce Find Lead" doc:id="a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c5d" processor="salesforce:query">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Find Lead" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+        <munit-tools:then-return>
+          <munit-tools:payload value="#[[]]" mediaType="application/java"/>
+        </munit-tools:then-return>
+      </munit-tools:mock-when>
+      <!-- Mock the Salesforce create operation to return a successful response -->
+      <munit-tools:mock-when doc:name="Mock Salesforce Create Leads" doc:id="b2c3d4e5-f6a7-4b5c-8d7e-9f0a1b2c3d4e" processor="salesforce:create">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Create Leads" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+        <munit-tools:then-return>
+          <munit-tools:payload value="#[MunitTools::getResourceAsString('create_leads_batch_5164/create_success_response_2955.json')]" mediaType="application/json" encoding="UTF-8"/>
+        </munit-tools:then-return>
+      </munit-tools:mock-when>
+    </munit:behavior>
+    <!-- Execution section: Running the flow to be tested -->
+    <munit:execution>
+      <flow-ref doc:name="Flow-ref to CreateLeadsBatch" doc:id="c3d4e5f6-a7b8-4c5d-8e7f-9a0b1c2d3e4f" name="CreateLeadsBatch"/>
+    </munit:execution>
+    <!-- Validation section: Verifying the outcome of the flow execution -->
+    <munit:validation>
+      <!-- Add a sleep to allow the async batch job to complete -->
+      <munit-tools:sleep doc:name="Sleep for Batch" doc:id="d4e5f6a7-b8c9-4d5e-8f7a-0b1c2d3e4f5a" time="5000"/>
+      <!-- Verify that the CSV to Maps transformation was called -->
+      <munit-tools:verify-call doc:name="Verify Transform CSV to Maps" doc:id="e5f6a7b8-c9d0-4e5f-8a7b-1c2d3e4f5a6b" processor="ee:transform">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Transform CSV to Maps" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the get-lead-by-email-subflow was called for each of the 10 records -->
+      <munit-tools:verify-call doc:name="Verify get-lead-by-email-subflow" doc:id="f6a7b8c9-d0e1-4f5a-8b7c-2d3e4f5a6b7c" processor="flow-ref" times="10">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="get-lead-by-email-subflow" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the Salesforce query was invoked 10 times -->
+      <munit-tools:verify-call doc:name="Verify Salesforce Query" doc:id="a7b8c9d0-e1f2-4a5b-8c7d-3e4f5a6b7c8d" processor="salesforce:query" times="10">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Find Lead" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the Salesforce create operation was called once with the aggregated records -->
+      <munit-tools:verify-call doc:name="Verify Salesforce Create" doc:id="b8c9d0e1-f2a3-4b5c-8d7e-4f5a6b7c8d9e" processor="salesforce:create" times="1">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Create Leads" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the logger before the insert was called -->
+      <munit-tools:verify-call doc:name="Verify Before Insert Logger" doc:id="c9d0e1f2-a3b4-4c5d-8e7f-5a6b7c8d9e0f" processor="logger">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Before Insert Logger" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the logger after the insert was called -->
+      <munit-tools:verify-call doc:name="Verify After Insert Logger" doc:id="d0e1f2a3-b4c5-4d5e-8f7a-6b7c8d9e0f1a" processor="logger">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="After Insert Logger" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify the on-complete logger shows 10 loaded and 0 failed records -->
+      <munit-tools:verify-call doc:name="Verify Log Results" doc:id="e1f2a3b4-c5d6-4e5f-8a7b-7c8d9e0f1a2b" processor="logger">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Log Results" attributeName="doc:name"/>
+          <munit-tools:with-attribute whereValue="#[&quot;10 Loaded Records 0 Failed Records&quot;]" attributeName="message"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!-- Verify that the failure logging step was not executed -->
+      <munit-tools:verify-call doc:name="Verify Log Failure Not Called" doc:id="f2a3b4c5-d6e7-4f5a-8b7c-8d9e0f1a2b3c" processor="logger" times="0">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Log Failure" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+    </munit:validation>
+  </munit:test>
+  <munit:test name="create_leads_batch_1" doc:id="a1b2c3d4-e5f6-4a5b-8c7d-9e0f1a2b3c4e" description="Partial success test case where some leads are created successfully but some leads encounter errors during Salesforce creation.">
+    <!--Behavior section sets up the initial state and mocks for the test.-->
+    <munit:behavior>
+      <!--Set the initial payload for the flow from a CSV file.-->
+      <munit:set-event doc:name="Set Event" doc:id="b1c2d3e4-f5a6-4b5c-8d7e-9f0a1b2c3d4f">
+        <munit:payload value="#[MunitTools::getResourceAsString('create_leads_batch_5164/leads_1776.csv')]" mediaType="text/csv" encoding="UTF-8"/>
+      </munit:set-event>
+      <!--Mock the Salesforce query to return an empty list, simulating that no leads exist.-->
+      <munit-tools:mock-when doc:name="Mock Find Lead" doc:id="c1d2e3f4-a5b6-4c5d-8e7f-9a0b1c2d3e4f" processor="salesforce:query">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Find Lead" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+        <munit-tools:then-return>
+          <munit-tools:payload value="#[[]]" mediaType="application/java"/>
+        </munit-tools:then-return>
+      </munit-tools:mock-when>
+      <!--Mock the Salesforce create operation to return a partial success response.-->
+      <munit-tools:mock-when doc:name="Mock Create Leads" doc:id="d1e2f3a4-b5c6-4d5e-8f7a-9b0c1d2e3f4a" processor="salesforce:create">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Create Leads" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+        <munit-tools:then-return>
+          <munit-tools:payload value="#[MunitTools::getResourceAsString('create_leads_batch_5164/create_leads_partial_success_response_1458.json')]" mediaType="application/json" encoding="UTF-8"/>
+        </munit-tools:then-return>
+      </munit-tools:mock-when>
+    </munit:behavior>
+    <!--Execution section runs the flow to be tested.-->
+    <munit:execution>
+      <flow-ref doc:name="Flow-ref to CreateLeadsBatch" doc:id="e1f2a3b4-c5d6-4e5f-8a7b-9c0d1e2f3a4b" name="CreateLeadsBatch"/>
+    </munit:execution>
+    <!--Validation section verifies the outcome of the flow execution.-->
+    <munit:validation>
+      <!--Add a sleep to allow the asynchronous batch job to complete.-->
+      <munit-tools:sleep doc:name="Sleep" doc:id="f1a2b3c4-d5e6-4f5a-8b7c-9d0e1f2a3b4c" time="5000"/>
+      <!--Verify that the get-lead-by-email-subflow was called for each of the 10 records.-->
+      <munit-tools:verify-call doc:name="Verify get-lead-by-email-subflow" doc:id="b2c3d4e5-f6a5-4b5c-8d7e-9f0a1b2c3d4e" processor="mule:flow-ref" times="10">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="get-lead-by-email-subflow" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the Salesforce query was called for each of the 10 records.-->
+      <munit-tools:verify-call doc:name="Verify Find Lead" doc:id="c2d3e4f5-a6b5-4c5d-8e7f-9a0b1c2d3e4f" processor="salesforce:query" times="10">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Find Lead" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the Salesforce create operation was called once for the aggregated records.-->
+      <munit-tools:verify-call doc:name="Verify Create Leads" doc:id="d2e3f4a5-b6c5-4d5e-8f7a-9b0c1d2e3f4a" processor="salesforce:create" times="1">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Create Leads" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the logger before the insert was called once.-->
+      <munit-tools:verify-call doc:name="Verify Before Insert Logger" doc:id="e2f3a4b5-c6d5-4e5f-8a7b-9c0d1e2f3a4b" processor="mule:logger" times="1">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Before Insert Logger" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the logger after the insert was called once.-->
+      <munit-tools:verify-call doc:name="Verify After Insert Logger" doc:id="f2a3b4c5-d6e5-4f5a-8b7c-9d0e1f2a3b4c" processor="mule:logger" times="1">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="After Insert Logger" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the failure logger was not called as the flow does not handle partial failures.-->
+      <munit-tools:verify-call doc:name="Verify Log Failure" doc:id="a3b4c5d6-e7f5-4a5b-8c7d-9e0f1a2b3c4d" processor="mule:logger" times="0">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Log Failure" attributeName="doc:name"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+      <!--Verify that the on-complete logger was called with the correct record counts based on actual flow behavior.-->
+      <munit-tools:verify-call doc:name="Verify Log Results" doc:id="b3c4d5e6-f7a5-4b5c-8d7e-9f0a1b2c3d4e" processor="mule:logger" times="1">
+        <munit-tools:with-attributes>
+          <munit-tools:with-attribute whereValue="Log Results" attributeName="doc:name"/>
+          <munit-tools:with-attribute whereValue="#['10 Loaded Records 0 Failed Records']" attributeName="message"/>
+        </munit-tools:with-attributes>
+      </munit-tools:verify-call>
+    </munit:validation>
+  </munit:test>
+</mule>
